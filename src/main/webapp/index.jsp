@@ -9,7 +9,7 @@
 <body>
 <h1>Ejemplo de Proyecto de ASR con Cloudant ahora con DevOps</h1>
 <hr />
-<p>Opciones sobre la base de datos Cloudant de David Clemente:</p>
+<p>Opciones sobre la base de datos Cloudant de David Clemente, ahora con GIT 1:</p>
 <ul>
 <li><a href="listar">Listar</a></li>
 <li><a href="insertar?palabra=hola">Insertar</a></li>
