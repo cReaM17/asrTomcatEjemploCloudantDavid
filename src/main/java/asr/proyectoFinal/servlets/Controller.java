@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import asr.proyectoFinal.dao.CloudantPalabraStore;
 import asr.proyectoFinal.dominio.Palabra;
+import asr.proyectoFinal.services.Analyzer;
+import asr.proyectoFinal.services.T2Speech;
 
 /**
  * Servlet implementation class Controller
@@ -62,7 +64,40 @@ public class Controller extends HttpServlet {
 					{
 						palabra.setName(parametro);
 						store.persist(palabra);
-					    out.println(String.format("Almacenada la palabra: %s", palabra.getName()));			    	  
+						String urlRedireccion = "results.jsp?palabra=";
+						String respuesta = Analyzer.toneAnalyzer(parametro).toString();
+						urlRedireccion = urlRedireccion.concat(respuesta);
+						response.sendRedirect(urlRedireccion);
+					    System.out.println(respuesta);	
+					    
+					    
+						InputStream mp3stream = T2Speech.conversionToSpeech(respuesta);
+						
+						String path_mp3 = request.getRealPath("/mp3");
+						
+						File f = new File(path_mp3 + "/temp.mp3");
+						
+						if (f != null) {
+							f.delete();
+						}
+						OutputStream streamSalida = new FileOutputStream(f);
+					    
+
+						//===========================================================
+						byte[] buffer = new byte[2048];
+						  int length = 0;
+						  while ((length = mp3stream.read(buffer)) > 0) {
+							  streamSalida.write(buffer, 0, length);
+							  streamSalida.flush();
+						  }
+
+						streamSalida.close();
+
+							
+						request.setAttribute("palabra", mp3stream);
+						//request.getRequestDispatcher("index.jsp").forward(request, response);
+						//===========================================================
+						
 					}
 				}
 				break;
